@@ -38,12 +38,12 @@ void resize(int w, int h) {
 	// glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
 	// glMatrixMode(GL_MODELVIEW);
 
-    printf("sdcdw\n");
+    //printf("sdcdw\n");
 }
 
 void display() 
 {
-    printf("display\n");
+    //printf("display\n");
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();  // reset the current matrix to identity matrix
 
@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
     // register callback func
     glutDisplayFunc(display);
     glutKeyboardFunc(processNormalKey);
-    //glutIdleFunc(idle);
+    glutIdleFunc(idle);
     glutMouseFunc(mouseFunc);
     //glutReshapeFunc(resize);
 
