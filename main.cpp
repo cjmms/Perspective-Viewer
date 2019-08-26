@@ -7,6 +7,7 @@
 #include <stdio.h>
 
 float angle = 0.0f;
+float deltaY = 0.0f;
 bool isRotating = false;
 
 void init() 
@@ -60,10 +61,12 @@ void display()
 	gluLookAt(0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);  // def
 
     glRotatef(angle, 0.0f, 1.0f, 0.0f);
+    glTranslatef(0, deltaY, 0);
     glutSolidTeapot(0.5);
     glutSwapBuffers();
 
     if (isRotating) angle += 1.0f;
+    deltaY += 0.01f;
 }
 
 void mouseFunc(int button, int state, int x, int y)
@@ -80,6 +83,7 @@ void processNormalKey(unsigned char key, int x, int y)
         exit(0);
     if (key == 'r') {       // reset teapot
         angle = 0.0;
+        deltaY = 0.0;
         display();
     }
 }
