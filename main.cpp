@@ -9,6 +9,7 @@
 float angle = 0.0f;
 float deltaY = 0.0f;
 bool isRotating = false;
+bool isMovingUp = false;
 
 void init() 
 {
@@ -58,7 +59,7 @@ void display()
 	gluPerspective(60.0, 1, 1.0, 20.0);  // specify a viewing frustum
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);  // def
+	gluLookAt(0.0, 0.0, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);  // def
 
     glRotatef(angle, 0.0f, 1.0f, 0.0f);
     glTranslatef(0, deltaY, 0);
@@ -66,7 +67,7 @@ void display()
     glutSwapBuffers();
 
     if (isRotating) angle += 1.0f;
-    deltaY += 0.01f;
+    if (isMovingUp) deltaY += 0.01f;
 }
 
 void mouseFunc(int button, int state, int x, int y)
@@ -92,6 +93,17 @@ void idle() {
     glutPostRedisplay();
 }
 
+void specialKey(int key, int x, int y) {
+    if (GLUT_ACTIVE_SHIFT == key) {
+        isMovingUp = true;
+        printf("shift\n");
+    }
+    else 
+        isMovingUp = false;
+}
+
+
+
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv); 
@@ -105,6 +117,7 @@ int main(int argc, char *argv[])
     // register callback func
     glutDisplayFunc(display);
     glutKeyboardFunc(processNormalKey);
+    glutSpecialFunc(specialKey);
     glutIdleFunc(display);
     glutMouseFunc(mouseFunc);
     //glutReshapeFunc(resize);
