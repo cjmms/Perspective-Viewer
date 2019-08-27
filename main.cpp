@@ -6,10 +6,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define CLEAR 5
+#define EXIT 6
+
 float angle = 0.0f;
 float deltaY = 0.0f;
 bool isRotating = false;
 bool isMovingUp = false;
+
+
 
 void init() 
 {
@@ -22,27 +27,6 @@ void init()
 
     glLightfv(GL_LIGHT0, GL_POSITION, light_pos);  // define the position of the light
 	glLightfv(GL_LIGHT0, GL_AMBIENT, white);  // specify the ambient RGBA intensity of the light
-}
-
-void resize(int w, int h) {
-    if (h == 0) h = 1;
-    float ratio = 1.0f * w / h;
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-    glViewport(0, 0, w, h);  // define a viewport and display in this viewport
-	gluPerspective(60.0, ratio, 1.0, 1000.0);  // specify a viewing frustum
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-    gluLookAt(0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);  // def
-
-    // glViewport(0, 0, w, h);
-	// glMatrixMode(GL_PROJECTION);
-	// glLoadIdentity();
-	// glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
-	// glMatrixMode(GL_MODELVIEW);
-
-    //printf("sdcdw\n");
 }
 
 void display() 
@@ -100,18 +84,36 @@ void processNormalKey(unsigned char key, int x, int y)
 }
 
 void idle() {
-    glutPostRedisplay();
+    // if (glutGetModifiers() == GLUT_ACTIVE_SHIFT) {
+    //     isMovingUp = true;
+    //     isRotating = false;
+    // }
+    display();
 }
 
-void specialKey(int key, int x, int y) {
-    if (GLUT_ACTIVE_SHIFT == key) {
-        isMovingUp = true;
-        printf("shift\n");
+void processMenuEvents(int option) {
+    switch (option) {
+        case CLEAR :
+            angle = 0.0;
+            deltaY = 0.0;
+            display();
+            break;
+        case EXIT :
+            exit(0);
+            break;
     }
-    else 
-        isMovingUp = false;
 }
 
+void createMenu() {
+    int menu = glutCreateMenu(processMenuEvents);
+
+    // add entries
+    glutAddMenuEntry("CLEAR", CLEAR);
+    glutAddMenuEntry("EXIT", EXIT);
+
+    // menu pops up when right button is pressed
+    glutAttachMenu(GLUT_RIGHT_BUTTON);
+}
 
 
 int main(int argc, char *argv[])
@@ -124,16 +126,14 @@ int main(int argc, char *argv[])
 
     init();
 
+    createMenu();
+
     // register callback func
     glutDisplayFunc(display);
     glutKeyboardFunc(processNormalKey);
-    glutSpecialFunc(specialKey);
-    glutIdleFunc(display);
+    glutIdleFunc(idle);
     glutMouseFunc(mouseFunc);
-    //glutReshapeFunc(resize);
 
     glutMainLoop();
     return 0;
 }
-
-
