@@ -72,10 +72,20 @@ void display()
 
 void mouseFunc(int button, int state, int x, int y)
 {
-    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
-        isRotating = true;
-    else 
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+        if (glutGetModifiers() == GLUT_ACTIVE_SHIFT) {  // press shift and left click
+            isMovingUp = true;
+            isRotating = false;
+        } 
+        else {      // left click, no shift
+            isMovingUp = false;     
+            isRotating = true;
+        }
+    }
+    else {
         isRotating = false;
+        isMovingUp = false;
+    }
 }
 
 void processNormalKey(unsigned char key, int x, int y) 
