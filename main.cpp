@@ -17,10 +17,10 @@ int clickY = 0;
 int deltaX = 0;
 int deltaY = 0;
 
-int oldTeapotX = 0;
-int oldTeapotY = 0;
+float oldTeapotX = 0;
+float oldTeapotY = 0;
 
-int teapotX = 0;
+float teapotX = 0;
 float teapotY = 0;
 
 bool isRotating = false;
@@ -44,9 +44,15 @@ void init()
 
 void moveTeapot() {
     int teapotDeltaY = teapotY - oldTeapotY;
-    if (abs(teapotDeltaY) * 80 <= abs(deltaY)) {
+    if (abs(teapotDeltaY) * 90 <= abs(deltaY)) {
         if (deltaY > 0) teapotY -= 0.01;
         else teapotY += 0.01;
+    }
+
+    int teapotDeltaX = teapotX - oldTeapotX;
+    if (abs(teapotDeltaX) * 90 <= abs(deltaX)) {
+        if (deltaX > 0) teapotX += 0.01;
+        else teapotX -= 0.01;
     }
 
     printf("deltaY (%d)\n", deltaY);
@@ -75,17 +81,13 @@ void display()
     glRotatef(angle, 0.0f, 1.0f, 0.0f);
                                               
     //printf("teapotX (%d, %d)\n", teapotX, teapotY);
-    glTranslated(0, teapotY, 0);
+    glTranslated(teapotX, teapotY, 0);
     glutSolidTeapot(0.5);
     glutSwapBuffers();
 
     if (isRotating) angle += 1.0;
-    if (isMoving) {
-        //teapotY += 0.01;
-        //if (teapotX - oldTeapotX != deltaX) teapotX += 0.01;
-        //if (teapotY - oldTeapotY <= convertY()) teapotY += 0.01;
-        moveTeapot();
-    }
+    if (isMoving) moveTeapot();
+    
 }
 
 void mouseFunc(int button, int state, int x, int y)
