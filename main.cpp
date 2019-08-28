@@ -10,9 +10,21 @@
 #define EXIT 6
 
 float angle = 0.0f;
-float deltaY = 0.0f;
+
+int clickX = 0;
+int clickY = 0;
+
+int deltaX = 0;
+int deltaY = 0;
+
+int oldTeapotX = 0;
+int oldTeapotY = 0;
+
+int teapotX = 0;
+float teapotY = 0;
+
 bool isRotating = false;
-bool isMovingUp = false;
+bool isMoving = false;
 
 
 
@@ -29,6 +41,19 @@ void init()
 	glLightfv(GL_LIGHT0, GL_AMBIENT, white);  // specify the ambient RGBA intensity of the light
 }
 
+
+void moveTeapot() {
+    int teapotDeltaY = teapotY - oldTeapotY;
+    if (abs(teapotDeltaY) * 80 <= abs(deltaY)) {
+        if (deltaY > 0) teapotY -= 0.01;
+        else teapotY += 0.01;
+    }
+
+    printf("deltaY (%d)\n", deltaY);
+    printf("teapotDeltaY (%d)\n\n", abs(teapotDeltaY));
+           
+}
+
 void display() 
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -43,32 +68,46 @@ void display()
 	gluPerspective(60.0, 1, 1.0, 20.0);  // specify a viewing frustum
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(0.0, 0.0, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);  // def
+	gluLookAt(  0.0, 0.0, 5.0, 
+                0.0, 0.0, 0.0, 
+                0.0, 1.0, 0.0);  
 
     glRotatef(angle, 0.0f, 1.0f, 0.0f);
-    glTranslatef(0, deltaY, 0);
+                                              
+    //printf("teapotX (%d, %d)\n", teapotX, teapotY);
+    glTranslated(0, teapotY, 0);
     glutSolidTeapot(0.5);
     glutSwapBuffers();
 
-    if (isRotating) angle += 1.0f;
-    if (isMovingUp) deltaY += 0.01f;
+    if (isRotating) angle += 1.0;
+    if (isMoving) {
+        //teapotY += 0.01;
+        //if (teapotX - oldTeapotX != deltaX) teapotX += 0.01;
+        //if (teapotY - oldTeapotY <= convertY()) teapotY += 0.01;
+        moveTeapot();
+    }
 }
 
 void mouseFunc(int button, int state, int x, int y)
 {
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+        // update click position
+        clickX = x;
+        clickY = y;
+
+        printf("click (%d, %d)\n", clickX, clickY);
         if (glutGetModifiers() == GLUT_ACTIVE_SHIFT) {  // press shift and left click
-            isMovingUp = true;
+            isMoving = true;
             isRotating = false;
         } 
         else {      // left click, no shift
-            isMovingUp = false;     
+            isMoving = false;     
             isRotating = true;
         }
     }
     else {
         isRotating = false;
-        isMovingUp = false;
+        isMoving = false;
     }
 }
 
@@ -78,24 +117,18 @@ void processNormalKey(unsigned char key, int x, int y)
         exit(0);
     if (key == 'r') {       // reset teapot
         angle = 0.0;
-        deltaY = 0.0;
+        teapotY = 0.0;
+        teapotX = 0.0;
         display();
     }
-}
-
-void idle() {
-    // if (glutGetModifiers() == GLUT_ACTIVE_SHIFT) {
-    //     isMovingUp = true;
-    //     isRotating = false;
-    // }
-    display();
 }
 
 void processMenuEvents(int option) {
     switch (option) {
         case CLEAR :
             angle = 0.0;
-            deltaY = 0.0;
+            teapotY = 0;
+            teapotX = 0;
             display();
             break;
         case EXIT :
@@ -115,6 +148,16 @@ void createMenu() {
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
+void motion(int currentX, int currentY)
+{
+    // update deltaX and deltaY
+    deltaX = currentX - clickX;
+    deltaY = currentY - clickY;
+
+    //printf("current (%d, %d)\n", currentX, currentY);
+	//printf("delta (%d, %d)\n\n", deltaX, deltaY);
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -131,8 +174,9 @@ int main(int argc, char *argv[])
     // register callback func
     glutDisplayFunc(display);
     glutKeyboardFunc(processNormalKey);
-    glutIdleFunc(idle);
+    glutIdleFunc(display);
     glutMouseFunc(mouseFunc);
+    glutMotionFunc(motion);
 
     glutMainLoop();
     return 0;
