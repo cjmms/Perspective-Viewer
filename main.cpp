@@ -10,7 +10,9 @@
 #define EXIT 6
 
 float angleY = 0.0f;
-float angleX = 0.0f;
+double angleX = 0;
+
+double deltaAngleX = 0;
 
 int clickX = 0;
 int clickY = 0;
@@ -30,7 +32,7 @@ bool isMoving = false;
 
 
 void init() 
-{
+{ 
     glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
@@ -57,6 +59,15 @@ void moveTeapot() {
     }        
 }
 
+void rotateTeapot() {
+    printf("distance: %d\n", abs(deltaY / 2));
+    printf("angleX: %f\n\n", angleX);
+    if (abs(deltaY / 2) > deltaAngleX) {
+        deltaAngleX += 3;
+        angleX += 3;
+    }
+}
+
 void display() 
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -75,15 +86,16 @@ void display()
                 0.0, 0.0, 0.0, 
                 0.0, 1.0, 0.0);  
 
-    glRotatef(angleY, 0.0f, 1.0f, 0.0f);
-    glRotatef(angleX, 1.0f, 0.0f, 0.0f);                                            
+    //glRotatef(angleY, 0.0f, 1.0f, 0.0f);
+    glRotated(angleX, 1.0f, 0.0f, 0.0f);                                            
     glTranslated(teapotX, teapotY, 0);   
     glutSolidTeapot(0.5);
     glutSwapBuffers();
 
-    if (isRotating) angleY += 1.0;   // update rotating angle
-    if (isRotating) angleX += 1.0;   // update rotating angle
+    // if (isRotating) angleY += 1.0;   // update rotating angle
+    // if (isRotating) angleX += 1.0;   // update rotating angle
 
+    if (isRotating) rotateTeapot();
     if (isMoving) moveTeapot();     // update translated value
 }
 
@@ -93,6 +105,8 @@ void mouseFunc(int button, int state, int x, int y)
         // update click position
         clickX = x;
         clickY = y;
+
+        deltaAngleX = 0;
 
         if (glutGetModifiers() == GLUT_ACTIVE_SHIFT) {  // press shift and left click
             oldTeapotX = teapotX;   // update teapot origin x position when shift and left button are pressed
@@ -165,6 +179,7 @@ void motion(int currentX, int currentY)
 
 int main(int argc, char *argv[])
 {
+
     glutInit(&argc, argv); 
     glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
     glutInitWindowSize(480, 480);
@@ -185,3 +200,10 @@ int main(int argc, char *argv[])
     glutMainLoop();
     return 0;
 }
+
+// int main(int argc, char const *argv[])
+// {
+//     float a = 0;
+//     printf("init angleX: %f\n\n", a);
+//     return 0;
+// }
