@@ -64,7 +64,8 @@ void rotateTeapot() {
     printf("angleX: %f\n\n", angleX);
     if (abs(deltaY / 2) > deltaAngleX) {
         deltaAngleX += 3;
-        angleX += 3;
+        if (deltaY > 0) angleX += 3;
+        else angleX -= 3;
     }
 }
 
