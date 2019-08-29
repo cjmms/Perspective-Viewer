@@ -9,10 +9,11 @@
 #define CLEAR 5
 #define EXIT 6
 
-float angleY = 0.0f;
+double angleY = 0;
 double angleX = 0;
 
 double deltaAngleX = 0;
+double deltaAngleY = 0;
 
 int clickX = 0;
 int clickY = 0;
@@ -60,12 +61,16 @@ void moveTeapot() {
 }
 
 void rotateTeapot() {
-    printf("distance: %d\n", abs(deltaY / 2));
-    printf("angleX: %f\n\n", angleX);
     if (abs(deltaY / 2) > deltaAngleX) {
         deltaAngleX += 3;
         if (deltaY > 0) angleX += 3;
         else angleX -= 3;
+    }
+
+    if (abs(deltaX / 2) > deltaAngleY) {
+        deltaAngleY += 3;
+        if (deltaX > 0) angleY += 3;
+        else angleY -= 3;
     }
 }
 
@@ -87,14 +92,11 @@ void display()
                 0.0, 0.0, 0.0, 
                 0.0, 1.0, 0.0);  
 
-    //glRotatef(angleY, 0.0f, 1.0f, 0.0f);
+    glRotatef(angleY, 0.0f, 1.0f, 0.0f);
     glRotated(angleX, 1.0f, 0.0f, 0.0f);                                            
     glTranslated(teapotX, teapotY, 0);   
     glutSolidTeapot(0.5);
     glutSwapBuffers();
-
-    // if (isRotating) angleY += 1.0;   // update rotating angle
-    // if (isRotating) angleX += 1.0;   // update rotating angle
 
     if (isRotating) rotateTeapot();
     if (isMoving) moveTeapot();     // update translated value
@@ -107,7 +109,8 @@ void mouseFunc(int button, int state, int x, int y)
         clickX = x;
         clickY = y;
 
-        deltaAngleX = 0;
+        deltaAngleX = 0;    // reset delta value to 0
+        deltaAngleY = 0;
 
         if (glutGetModifiers() == GLUT_ACTIVE_SHIFT) {  // press shift and left click
             oldTeapotX = teapotX;   // update teapot origin x position when shift and left button are pressed
@@ -202,9 +205,3 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-// int main(int argc, char const *argv[])
-// {
-//     float a = 0;
-//     printf("init angleX: %f\n\n", a);
-//     return 0;
-// }
