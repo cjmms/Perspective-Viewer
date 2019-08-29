@@ -9,7 +9,8 @@
 #define CLEAR 5
 #define EXIT 6
 
-float angle = 0.0f;
+float angleY = 0.0f;
+float angleX = 0.0f;
 
 int clickX = 0;
 int clickY = 0;
@@ -74,12 +75,15 @@ void display()
                 0.0, 0.0, 0.0, 
                 0.0, 1.0, 0.0);  
 
-    glRotatef(angle, 0.0f, 1.0f, 0.0f);                                           
+    glRotatef(angleY, 0.0f, 1.0f, 0.0f);
+    glRotatef(angleX, 1.0f, 0.0f, 0.0f);                                            
     glTranslated(teapotX, teapotY, 0);   
     glutSolidTeapot(0.5);
     glutSwapBuffers();
 
-    if (isRotating) angle += 1.0;   // update rotating angle
+    if (isRotating) angleY += 1.0;   // update rotating angle
+    if (isRotating) angleX += 1.0;   // update rotating angle
+
     if (isMoving) moveTeapot();     // update translated value
 }
 
@@ -113,7 +117,8 @@ void processNormalKey(unsigned char key, int x, int y)
     if (key == 27)
         exit(0);
     if (key == 'r') {       // reset teapot
-        angle = 0.0;
+        angleX = 0.0;
+        angleY = 0.0;
         teapotY = 0.0;
         teapotX = 0.0;
         oldTeapotX = 0;
@@ -126,7 +131,8 @@ void processMenuEvents(int option)
 {
     switch (option) {
         case CLEAR :
-            angle = 0.0;
+            angleX = 0.0;
+            angleY = 0.0;
             teapotY = 0;
             teapotX = 0;
             oldTeapotX = 0;
