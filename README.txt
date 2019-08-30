@@ -13,4 +13,4 @@ For the teapot translation, the distance teapot moves may not be as accurate as 
 My assignment works for Virtual Studio.
 I really don't know how to sepreate my files into two folders.
 If something went wrong, I have another folder called F3, it has the source file and Makefile, 
-the program should be able to compile if the machine has installed freegl.
+the program should be able to compile if the machine has installed OpenGL.
