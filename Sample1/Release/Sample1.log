@@ -1,0 +1,15 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(387,5): warning MSB8028: The intermediate directory (Release\) contains files shared from another project (Sample1.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  teapot.cpp
+teapot.cpp(46): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+teapot.cpp(48): warning C4305: '-=': truncation from 'double' to 'float'
+teapot.cpp(49): warning C4305: '+=': truncation from 'double' to 'float'
+teapot.cpp(52): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+teapot.cpp(54): warning C4305: '+=': truncation from 'double' to 'float'
+teapot.cpp(55): warning C4305: '-=': truncation from 'double' to 'float'
+teapot.cpp(91): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+  Generating code
+  13 of 13 functions (100.0%) were compiled, the rest were copied from previous compilation.
+    10 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  Sample1.vcxproj -> \\nas01.itap.purdue.edu\puhome\cs.data\desktop\4_SamplePrograms\Sample1\Release\Projective-Viewer.exe
