@@ -1,8 +1,8 @@
 CC = g++
 CFLAGS = -Wall
-PROG = window
+PROG = teapot
 
-SRCS = main.cpp
+SRCS = teapot.cpp
 
 ifeq ($(shell uname),Darwin)
 	LIBS = -framework OpenGL -framework GLUT
